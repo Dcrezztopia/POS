@@ -6,6 +6,7 @@ use App\Http\Controllers\HCController;
 use App\Http\Controllers\BKController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\KategoriController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,4 +40,5 @@ Route::get('/user/{id}/name/{name}', function ($id, $name) {
 Route::get('/sales', [TransaksiController::class, 'landing']);
 
 Route::get('/level', [LevelController::class, 'index']);
+Route::get('/kategori', [KategoriController::class, 'index']);
 
