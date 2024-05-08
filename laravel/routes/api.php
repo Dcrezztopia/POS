@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('/register1', App\Http\Controllers\Api\RegisterController::class)->name('register1');
 Route::post('/register', App\Http\Controllers\Api\RegisterController::class)->name('register');
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/logout', LogoutController::class)->name('logout');
