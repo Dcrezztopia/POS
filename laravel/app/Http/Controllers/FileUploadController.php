@@ -4,43 +4,36 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-
 class FileUploadController extends Controller
 {
-    public function fileUpload(){
+    public function fileUpload()
+    {
         return view('file-upload');
     }
 
-    public function prosesFileUpload(Request $request){
-        // dump($request->berkas);
-        // return "Pemrosesan file upload di sini";
-         /* if ($request->hasFile('berkas')) {
-            echo "path(): " . $request->berkas->path();
-            echo "<br>";
-            echo "extension(): " . $request->berkas->extension();
-            echo "<br>";
-            echo "getClientOriginalExtension(): " . $request->berkas->getClientOriginalExtension();
-            echo "<br>";
-            echo "getMimeType(): " . $request->berkas->getMimeType();
-            echo "<br>";
-            echo "getClientOriginalName(): " . $request->berkas->getClientOriginalName();
-            echo "<br>";
-            echo "getSize(): " . $request->berkas->getSize();
-        } else {
-            echo "Tidak ada berkas yang diupload.";
-        // } */
+    public function prosesFileUpload(Request $request)
+    {
+        // Validate the incoming file upload and nama_gambar field
         $request->validate([
-            'berkas' => 'required|file|image|max:2000',]);
-            $extFile=$request->berkas->getClientOriginalName();
-            $namaFile='web-'.time().".".$extFile;
+            'berkas' => 'required|file|image|max:5000', // Validate file upload
+            'nama_gambar' => 'required', // Validate nama_gambar field
+        ]);
 
-            $path = $request->berkas->move('gambar',$namaFile);
-            $path = str_replace("\\", "//", $path);
-            echo "Variable path berisi: $path<br>";
+        // Generate a unique file name
+        $extfile = $request->berkas->getClientOriginalExtension();
+        $namafile = $request->input('nama_gambar') . '.' . $extfile;
 
-            $pathBaru=asset('gambar/'.$namaFile);
-            echo "proses upload berhasil, data disimpan pada: $path";
-            echo "<br>";
-            echo "Tampilkan link:<a href= '$pathBaru'>$pathBaru</a>";
+        // Store the file in the 'public' disk with the generated file name
+        $request->berkas->storeAs('public/image-uploaded', $namafile);
+
+        // Prepare the URL to display the uploaded image
+        $imageUrl = asset('storage/image-uploaded/' . $namafile);
+
+        // Redirect to a view to display the uploaded image
+        return view('uploaded-image', [
+            'imageUrl' => $imageUrl,
+            'filename' => $namafile,
+            'pathPublic' => asset('storage/image-uploaded/' . $namafile)
+        ]);
     }
 }
